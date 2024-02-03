@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import filedialog
+from tkinter.filedialog import askdirectory
 from tkinter import messagebox
 from tkinter import simpledialog
 from tkinter import font,ttk
@@ -45,15 +46,24 @@ class MaskEditorApp:
         create_button.grid(row=1, column=1, padx=10, pady=10)
 
     def select_edit_mode(self):
-        self.root.destroy()  # Закрываем окно выбора режима
+
+        self.root.destroy()
+        # self.root.quit()
+        # self.root.destroy() # close the current window
+        # self.root = tk.Tk() # create another Tk instance
+        # self.app = SelectFolders(self.root, "Edit mask") # create Demo2 window
+        # self.root.mainloop()
         self.show_select_folders("Edit mask")
 
     def select_create_mode(self):
-        self.root.destroy()  # Закрываем окно выбора режима
+        self.root.destroy()
+        # self.root.quit()
+
         self.show_select_folders("Create mask")
 
     def show_select_folders(self, mode):
         select_folders = SelectFolders(self.root, mode)
+
 
 class SelectFolders:
     def __init__(self, root, mode):
@@ -78,14 +88,20 @@ class SelectFolders:
         self.other_ext = False
         self.no_images = False
 
+        self.folder = tk.StringVar()
+
         self.layout = tk.Frame(self.window)
         self.which_dir()
 
     
     def which_dir(self):
         if self.mode == 'Create mask':
+            # self.root.destroy()
+
             self.choose_imgs_dir()
         elif self.mode == 'Edit mask':
+            # self.root.destroy()
+
             self.choose_mask_dir()
 
 
@@ -100,10 +116,36 @@ class SelectFolders:
         dir_btn1 = tk.Button(self.window, text="Browse", command=self.open_imgs_dir_dialog)
         dir_btn1.grid(row=1, column=2, columnspan=1)
 
-        submit_btn = tk.Button(self.window, text="Submit paths", command=self.check_masks)
-        submit_btn.grid(row=2, column=2, columnspan=2)
+        mask_label = tk.Label(self.window, text="Mask images directory:", font=("Montserrat", 14))
+        mask_label.grid(row=2, column=0, columnspan=1, sticky="e")
+        self.dir_name_edit2 = tk.Entry(self.window)
+        self.dir_name_edit2.grid(row=2, column=1, columnspan=1)
+        dir_btn2 = tk.Button(self.window, text="Browse", command=self.open_masks_dir_dialog)
+        dir_btn2.grid(row=2, column=2, columnspan=1)
 
+
+        mask_dir_name_label = tk.Label(self.window, text="Mask images name:", font=("Montserrat", 14))
+        mask_dir_name_label.grid(row=3, column=0, columnspan=1, sticky="e")
+        self.mask_dir_name = tk.Entry(self.window, textvariable=self.folder)
+        self.mask_dir_name.grid(row=3, column=1, columnspan=1)
+        name_btn = tk.Button(self.window, text="Submit name", command=self.make_dir)
+        name_btn.grid(row=3, column=2, columnspan=1)
+
+        submit_btn = tk.Button(self.window, text="Submit paths", command=self.open_creator)
+        submit_btn.grid(row=4, column=2, columnspan=2)
+
+
+    def open_creator(self):
+        return 0
+
+
+
+    def make_dir(self):
+        name = self.folder.get()
+        os.makedirs(os.path.join(self.path_mask, name), exist_ok=True)
+        self.path_mask = os.path.join(self.path_mask, name)
     
+
     def choose_mask_dir(self):
         instruction_label = tk.Label(self.window, text="Choose paths to folders", font=("Montserrat", 14))
         instruction_label.grid(row=0, column=1, columnspan=3)

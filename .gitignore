@@ -162,3 +162,9 @@ cython_debug/
 zoom.py
 test.py
 test_mask_maker_zoom.py
+test_thresholds.ipynb
+./data
+data
+mask
+*.png
+*.tif
