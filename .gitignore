@@ -168,3 +168,4 @@ data
 mask
 *.png
 *.tif
+test_mask_maker_make.py

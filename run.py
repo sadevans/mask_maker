@@ -41,15 +41,15 @@ class MaskEditorApp:
         edit_button = tk.Button(root, text="Edit mask", command=self.select_edit_mode)
         edit_button.grid(row=1, column=0, padx=10, pady=10)
 
-        create_button = tk.Button(root, text="Create mask", command=self.select_create_mode)
-        create_button.grid(row=1, column=1, padx=10, pady=10)
+        # create_button = tk.Button(root, text="Create mask", command=self.select_create_mode)
+        # create_button.grid(row=1, column=1, padx=10, pady=10)
 
     def select_edit_mode(self):
-        self.root.destroy()  # Закрываем окно выбора режима
+        # self.root.destroy()  # Закрываем окно выбора режима
         self.show_select_folders("Edit mask")
 
     def select_create_mode(self):
-        self.root.destroy()  # Закрываем окно выбора режима
+        # self.root.destroy()  # Закрываем окно выбора режима
         self.show_select_folders("Create mask")
 
     def show_select_folders(self, mode):
