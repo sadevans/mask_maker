@@ -22,11 +22,6 @@ python -m pip install pip setuptools --upgrade && pip install -r requirements.tx
 python3 -m pip install pip setuptools --upgrade && pip install -r requirements.txt
 ```
 
-## Запуск
-Чтобы начать использовать:
-```bash
-python run.py
-```
 # Запуск
 Для использования GUI необходимо запустить файл `run.py`
 ```bash
