@@ -202,6 +202,8 @@ class SelectFolders:
     def open_check_masks(self):
         print('open check masks')
         masks_checker = CheckMasks(self.path_denoised, self.path_mask, self.filenames_img_, self.filenames_mask_, self.images_without_masks)
+        # masks_checker = CheckMasks(self, self.path_denoised, self.path_mask, self.filenames_img_, self.filenames_mask_, self.images_without_masks)
+
 
     def open_imgs_dir_dialog(self):
         dir_name1 = filedialog.askdirectory(title="Select a denoised images directory")
@@ -218,10 +220,10 @@ class SelectFolders:
             self.path_mask = dir_name2
 
 
-class CheckMasks:
-    # def __init__(self, main_window, path_denoised, path_mask, filenames_img, filenames_mask, images_without_masks):
+class CheckMasks(tk.Tk):
     def __init__(self, path_denoised, path_mask, filenames_img, filenames_mask, images_without_masks):
-        # self.main_window = main_window
+        super().__init__()
+
         self.path_denoised = path_denoised
         self.path_mask = path_mask
         self.filenames_img = filenames_img
@@ -231,43 +233,45 @@ class CheckMasks:
         self.new_filenames_mask = None
         self.current_img_index = 0
 
-        self.root = tk.Toplevel()
-        self.root.title("Some images don't have masks")
+        self.title("Some images don't have masks")
 
-        instruction_label = tk.Label(self.root, text=f'Всего изображений {len(self.filenames_img)}\nИзображений без масок {len(self.images_without_masks)}\n', font=("Montserrat", 16))
+        instruction_label = tk.Label(self, text=f'Всего изображений {len(self.filenames_img)}\nИзображений без масок {len(self.images_without_masks)}\n', font=('Montserrat', 16))
         instruction_label.pack()
 
-        images_without_masks_list = tk.Listbox(self.root, selectmode=tk.SINGLE, height=700)
+        images_without_masks_list = tk.Listbox(self, height=10)
         images_without_masks_list.pack()
         for file in self.images_without_masks:
             images_without_masks_list.insert(tk.END, file)
 
-        button_frame = tk.Frame(self.root)
+        button_frame = tk.Frame(self)
         button_frame.pack()
 
-        go_back_btn = tk.Button(button_frame, text="Go back", command=self.open_select_folders)
-        go_back_btn.pack(side=tk.LEFT)
+        # go_back_btn = tk.Button(button_frame, text='Go back', command=self.open_select_folders)
+        # go_back_btn.pack(side=tk.LEFT)
 
-        continue_btn = tk.Button(button_frame, text="Ok, continue", command=self.check)
-        continue_btn.pack(side=tk.RIGHT)
+        continue_btn = tk.Button(button_frame, text='Ok, continue', command=self.check)
+        continue_btn.pack(side=tk.LEFT)
 
-    def open_select_folders(self):
-        self.root.destroy()  # Закрываем текущее окно
+    # def open_select_folders(self):
+        # self.root.destroy()  # Закрываем текущее окно
         # self.main_window.show_select_folders()
 
     def check(self):
         if len(self.filenames_img) == len(self.images_without_masks):
-            messagebox.showwarning("Warning", "Нет изображений с масками.\nПожалуйста, выберите папки заново.")
+            messagebox.showwarning("Предупреждение", "Нет изображений с масками.\nПожалуйста, выберите папки заново.")
         else:
-            print('open photo viewer')
             self.open_photo_viewer()
 
     def open_photo_viewer(self):
-        self.new_filenames_img = list(set(self.filenames_img) - set(self.images_without_masks))
-        self.new_filenames_mask = list(set(self.filenames_mask) - set(self.images_without_masks))
-        # self.photo_viewer = PhotoViewer(self.main_window, self.path_denoised, self.path_mask, self.new_filenames_img, self.new_filenames_mask)
+        
+        if len(self.filenames_img) > len(self.filenames_mask):
+            self.new_filenames_img = list(set(self.filenames_img) - set(self.images_without_masks))
+            self.new_filenames_mask = list(set(self.filenames_mask) - set(self.images_without_masks))
+        else:
+            self.new_filenames_img = list(set(self.filenames_img) - set(self.images_without_masks))
+            self.new_filenames_mask = [file[:-4] + '.png' for file in self.new_filenames_img]
         self.photo_viewer = PhotoViewer(self.path_denoised, self.path_mask, self.new_filenames_img, self.new_filenames_mask)
-
+        
 
 class PhotoViewer:
     def __init__(self,path_denoised, path_mask, filenames_img, filenames_mask):
