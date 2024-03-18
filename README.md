@@ -18,3 +18,10 @@ source venv/bin/activate
 ```bash
 pip install -r requirements.txt
 ```
+# Запуск
+Для использования GUI необходимо запустить файл `run.py`
+```bash
+python run.py
+```
+
+Теперь можно пользоваться GUI и редактировать маски.
